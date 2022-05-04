@@ -42,7 +42,8 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
         if self.searchWord.count != 0 {
             repoUrl = "https://api.github.com/search/repositories?q=\(self.searchWord!)"
-            task = URLSession.shared.dataTask(with: URL(string: repoUrl)!) { (data, _, _) in
+            task = URLSession.shared.dataTask(with: URL(string: repoUrl)!) { [weak self] (data, _, _) in
+                guard let self = self else { return }
                 do {
                     if let obj = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
                         if let items = obj["items"] as? [[String: Any]] {
