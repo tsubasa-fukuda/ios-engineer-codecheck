@@ -12,7 +12,7 @@ class ViewController: UITableViewController, UISearchBarDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
 
-    var repo: [[String: Any]]=[]
+    var repos: [[String: Any]]=[]
 
     var task: URLSessionTask?
     var word: String!
@@ -46,7 +46,7 @@ class ViewController: UITableViewController, UISearchBarDelegate {
                 do {
                     if let obj = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
                         if let items = obj["items"] as? [[String: Any]] {
-                        self.repo = items
+                        self.repos = items
                             DispatchQueue.main.async {
                                 self.tableView.reloadData()
                             }
@@ -73,15 +73,15 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return repo.count
+        return self.repos.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = UITableViewCell()
-        let rp = repo[indexPath.row]
-        cell.textLabel?.text = rp["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = rp["language"] as? String ?? ""
+        let repo = self.repos[indexPath.row]
+        cell.textLabel?.text = repo["full_name"] as? String ?? ""
+        cell.detailTextLabel?.text = repo["language"] as? String ?? ""
         cell.tag = indexPath.row
         return cell
 
