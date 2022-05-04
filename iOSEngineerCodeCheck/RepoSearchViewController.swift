@@ -38,11 +38,12 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 
-        self.searchWord = searchBar.text!
+        self.searchWord = searchBar.text ?? ""
+        guard let query = self.searchWord.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else { return }
 
-        if self.searchWord.count != 0 {
-            repoUrl = "https://api.github.com/search/repositories?q=\(self.searchWord!)"
-            task = URLSession.shared.dataTask(with: URL(string: repoUrl)!) { [weak self] (data, _, _) in
+        if query.count != 0 {
+            self.repoUrl = "https://api.github.com/search/repositories?q=\(query)"
+            self.task = URLSession.shared.dataTask(with: URL(string: self.repoUrl)!) { [weak self] (data, _, _) in
                 guard let self = self else { return }
                 do {
                     if let obj = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
