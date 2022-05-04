@@ -45,7 +45,8 @@ class RepoDetailViewController: UIViewController {
 
         if let owner = repo["owner"] as? [String: Any] {
             if let avatarImgUrl = owner["avatar_url"] as? String {
-                URLSession.shared.dataTask(with: URL(string: avatarImgUrl)!) { (data, _, _) in
+                URLSession.shared.dataTask(with: URL(string: avatarImgUrl)!) { [weak self] (data, _, _) in
+                    guard let self = self else { return }
                     let avatarImg = UIImage(data: data!)!
                     DispatchQueue.main.async {
                         self.avatarView.image = avatarImg
