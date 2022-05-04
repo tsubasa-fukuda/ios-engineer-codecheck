@@ -9,6 +9,7 @@
 import XCTest
 @testable import iOSEngineerCodeCheck
 
+// swiftlint:disable type_name
 class iOSEngineerCodeCheckTests: XCTestCase {
 
     override func setUpWithError() throws {
