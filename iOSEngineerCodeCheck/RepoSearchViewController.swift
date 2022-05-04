@@ -8,15 +8,15 @@
 
 import UIKit
 
-class ViewController: UITableViewController, UISearchBarDelegate {
+class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
 
-    var repo: [[String: Any]]=[]
+    var repos: [[String: Any]]=[]
 
     var task: URLSessionTask?
-    var word: String!
-    var url: String!
+    var searchWord: String!
+    var repoUrl: String!
     var idx: Int!
 
     override func viewDidLoad() {
@@ -38,15 +38,15 @@ class ViewController: UITableViewController, UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 
-        word = searchBar.text!
+        self.searchWord = searchBar.text!
 
-        if word.count != 0 {
-            url = "https://api.github.com/search/repositories?q=\(word!)"
-            task = URLSession.shared.dataTask(with: URL(string: url)!) { (data, _, _) in
+        if self.searchWord.count != 0 {
+            repoUrl = "https://api.github.com/search/repositories?q=\(self.searchWord!)"
+            task = URLSession.shared.dataTask(with: URL(string: repoUrl)!) { (data, _, _) in
                 do {
                     if let obj = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
                         if let items = obj["items"] as? [[String: Any]] {
-                        self.repo = items
+                        self.repos = items
                             DispatchQueue.main.async {
                                 self.tableView.reloadData()
                             }
@@ -65,7 +65,7 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if segue.identifier == "Detail"{
-            if let dtl = segue.destination as? ViewController2 {
+            if let dtl = segue.destination as? RepoDetailViewController {
                 dtl.vc1 = self
             }
         }
@@ -73,15 +73,15 @@ class ViewController: UITableViewController, UISearchBarDelegate {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return repo.count
+        return self.repos.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = UITableViewCell()
-        let rp = repo[indexPath.row]
-        cell.textLabel?.text = rp["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = rp["language"] as? String ?? ""
+        let repo = self.repos[indexPath.row]
+        cell.textLabel?.text = repo["full_name"] as? String ?? ""
+        cell.detailTextLabel?.text = repo["language"] as? String ?? ""
         cell.tag = indexPath.row
         return cell
 
