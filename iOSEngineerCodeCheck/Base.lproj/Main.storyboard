@@ -137,13 +137,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="J6o-vL-S1z"/>
                     <connections>
-                        <outlet property="frksLbl" destination="ZMv-4f-X2V" id="i84-sH-c5t"/>
-                        <outlet property="imgView" destination="Iim-eb-8Ad" id="dmH-tP-ZuI"/>
-                        <outlet property="isssLbl" destination="dzg-K8-h2L" id="L0v-sy-cD4"/>
-                        <outlet property="langLbl" destination="s3M-QO-Kom" id="x3L-gZ-aZZ"/>
-                        <outlet property="strsLbl" destination="0WZ-UA-R8O" id="gYb-gI-iMf"/>
-                        <outlet property="ttlLbl" destination="4q1-pG-WSB" id="UQ0-5D-rWe"/>
-                        <outlet property="wchsLbl" destination="lQC-lo-IqN" id="Drg-Jv-iUh"/>
+                        <outlet property="avatarView" destination="Iim-eb-8Ad" id="dmH-tP-ZuI"/>
+                        <outlet property="forksCountLbl" destination="ZMv-4f-X2V" id="i84-sH-c5t"/>
+                        <outlet property="fullNameLbl" destination="4q1-pG-WSB" id="UQ0-5D-rWe"/>
+                        <outlet property="languageLbl" destination="s3M-QO-Kom" id="x3L-gZ-aZZ"/>
+                        <outlet property="openIssuesCountLbl" destination="dzg-K8-h2L" id="L0v-sy-cD4"/>
+                        <outlet property="stargazersCountLbl" destination="0WZ-UA-R8O" id="gYb-gI-iMf"/>
+                        <outlet property="watchersCountLbl" destination="lQC-lo-IqN" id="Drg-Jv-iUh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rj0-Ld-RTn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
