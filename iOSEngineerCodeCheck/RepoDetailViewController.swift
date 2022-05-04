@@ -30,7 +30,7 @@ class RepoDetailViewController: UIViewController {
 
         languageLbl.text = "Written in \(repo["language"] as? String ?? "")"
         stargazersCountLbl.text = "\(repo["stargazers_count"] as? Int ?? 0) stars"
-        watchersCountLbl.text = "\(repo["wachers_count"] as? Int ?? 0) watchers"
+        watchersCountLbl.text = "\(repo["watchers_count"] as? Int ?? 0) watchers"
         forksCountLbl.text = "\(repo["forks_count"] as? Int ?? 0) forks"
         openIssuesCountLbl.text = "\(repo["open_issues_count"] as? Int ?? 0) open issues"
         getImage()
