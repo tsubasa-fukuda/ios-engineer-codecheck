@@ -48,7 +48,8 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
             self.task = URLSession.shared.dataTask(with: repoUrl) { [weak self] (data, _, _) in
                 guard let self = self else { return }
                 do {
-                    if let obj = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
+                    if let data = data,
+                       let obj = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
                         if let items = obj["items"] as? [[String: Any]] {
                         self.repos = items
                             DispatchQueue.main.async {
