@@ -44,17 +44,17 @@ class RepoDetailViewController: UIViewController {
 
         fullNameLbl.text = repo["full_name"] as? String
 
-        if let owner = repo["owner"] as? [String: Any] {
-            if let avatarImgUrl = owner["avatar_url"] as? String {
-                URLSession.shared.dataTask(with: URL(string: avatarImgUrl)!) { [weak self] (data, _, _) in
-                    guard let self = self else { return }
-                    let avatarImg = UIImage(data: data!)!
-                    DispatchQueue.main.async {
-                        self.avatarView.image = avatarImg
-                    }
-                }.resume()
+        guard let owner = repo["owner"] as? [String: Any],
+              let avatarImgUrl = owner["avatar_url"] as? String,
+              let avatarImgUrl = URL(string: avatarImgUrl) else { return }
+
+        URLSession.shared.dataTask(with: avatarImgUrl) { [weak self] (data, _, _) in
+            guard let self = self else { return }
+            let avatarImg = UIImage(data: data!)!
+            DispatchQueue.main.async {
+                self.avatarView.image = avatarImg
             }
-        }
+        }.resume()
 
     }
 
