@@ -15,9 +15,9 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
     var repos: [[String: Any]]=[]
 
     var task: URLSessionTask?
-    var searchWord: String!
-    var repoUrl: String!
-    var idx: Int!
+    var searchWord: String?
+    var repoUrl: String?
+    var idx: Int?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,14 +39,17 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 
         self.searchWord = searchBar.text ?? ""
-        guard let query = self.searchWord.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else { return }
+        guard let query = self.searchWord?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else { return }
 
         if query.count != 0 {
             self.repoUrl = "https://api.github.com/search/repositories?q=\(query)"
-            self.task = URLSession.shared.dataTask(with: URL(string: self.repoUrl)!) { [weak self] (data, _, _) in
+            guard let repoUrl = URL(string: self.repoUrl ?? "") else { return }
+
+            self.task = URLSession.shared.dataTask(with: repoUrl) { [weak self] (data, _, _) in
                 guard let self = self else { return }
                 do {
-                    if let obj = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
+                    if let data = data,
+                       let obj = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
                         if let items = obj["items"] as? [[String: Any]] {
                         self.repos = items
                             DispatchQueue.main.async {
@@ -68,7 +71,7 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
         if segue.identifier == "Detail"{
             if let dtl = segue.destination as? RepoDetailViewController {
-                dtl.vc1 = self
+                dtl.repoSearchVC = self
             }
         }
 
