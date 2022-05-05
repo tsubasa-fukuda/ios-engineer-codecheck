@@ -43,9 +43,9 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
         if query.count != 0 {
             self.repoUrl = "https://api.github.com/search/repositories?q=\(query)"
-            guard let repoUrl = self.repoUrl else { return }
+            guard let repoUrl = URL(string: self.repoUrl ?? "") else { return }
 
-            self.task = URLSession.shared.dataTask(with: URL(string: repoUrl)!) { [weak self] (data, _, _) in
+            self.task = URLSession.shared.dataTask(with: repoUrl) { [weak self] (data, _, _) in
                 guard let self = self else { return }
                 do {
                     if let obj = try JSONSerialization.jsonObject(with: data!) as? [String: Any] {
