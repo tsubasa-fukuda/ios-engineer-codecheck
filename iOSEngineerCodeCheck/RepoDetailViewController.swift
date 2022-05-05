@@ -49,8 +49,9 @@ class RepoDetailViewController: UIViewController {
               let avatarImgUrl = URL(string: avatarImgUrl) else { return }
 
         URLSession.shared.dataTask(with: avatarImgUrl) { [weak self] (data, _, _) in
-            guard let self = self else { return }
-            let avatarImg = UIImage(data: data!)!
+            guard let self = self,
+                  let data = data,
+                  let avatarImg = UIImage(data: data) else { return }
             DispatchQueue.main.async {
                 self.avatarView.image = avatarImg
             }
