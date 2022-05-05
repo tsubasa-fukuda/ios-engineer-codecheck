@@ -21,12 +21,13 @@ class RepoDetailViewController: UIViewController {
     @IBOutlet weak var forksCountLbl: UILabel!
     @IBOutlet weak var openIssuesCountLbl: UILabel!
 
-    var vc1: RepoSearchViewController!
+    var repoSearchVC: RepoSearchViewController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let repo = vc1.repos[vc1.idx]
+        guard let index: Int = repoSearchVC.idx else { return }
+        let repo = repoSearchVC.repos[index]
 
         languageLbl.text = "Written in \(repo["language"] as? String ?? "")"
         stargazersCountLbl.text = "\(repo["stargazers_count"] as? Int ?? 0) stars"
@@ -38,8 +39,8 @@ class RepoDetailViewController: UIViewController {
     }
 
     func getImage() {
-
-        let repo = vc1.repos[vc1.idx]
+        guard let index: Int = repoSearchVC.idx else { return }
+        let repo = repoSearchVC.repos[index]
 
         fullNameLbl.text = repo["full_name"] as? String
 
