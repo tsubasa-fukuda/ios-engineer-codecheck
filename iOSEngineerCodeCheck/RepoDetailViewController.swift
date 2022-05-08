@@ -27,7 +27,7 @@ class RepoDetailViewController: UIViewController {
         super.viewDidLoad()
 
         guard let index: Int = repoSearchVC.idx else { return }
-        let repo = repoSearchVC.repos[index]
+        let repo = repoSearchVC.repositories[index]
 
         languageLbl.text = "Written in \(repo["language"] as? String ?? "")"
         stargazersCountLbl.text = "\(repo["stargazers_count"] as? Int ?? 0) stars"
@@ -40,7 +40,7 @@ class RepoDetailViewController: UIViewController {
 
     func getImage() {
         guard let index: Int = repoSearchVC.idx else { return }
-        let repo = repoSearchVC.repos[index]
+        let repo = repoSearchVC.repositories[index]
 
         fullNameLbl.text = repo["full_name"] as? String
 
