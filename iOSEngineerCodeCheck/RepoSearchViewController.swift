@@ -15,7 +15,6 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
 
-    var task: URLSessionTask?
     var searchWord: String?
     var repoUrl: String?
     var idx: Int?
@@ -32,10 +31,6 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
         // ↓こうすれば初期のテキストを消せる
         searchBar.text = ""
         return true
-    }
-
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        task?.cancel()
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
