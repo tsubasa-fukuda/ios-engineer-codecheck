@@ -14,8 +14,9 @@ extension URLSession {
     /// API結果取得処理
     /// - Parameters:
     ///   - apiUrl: 検索URL
-    ///   - type: 取得するデータ型
+    ///   - type: 取得した結果
     ///   - completion: delegateで実行するfunction
+    /// - Returns: タスク
     class func getApiResult(apiUrl: URL,
                             type: ApiResultType,
                             completion: @escaping (ApiResult) -> Void) -> URLSessionTask? {
@@ -38,9 +39,15 @@ extension URLSession {
         return task
     }
 
-    class func getAvaterImage(url: URL,
-                              type: ApiResultType,
-                              completion: @escaping (ApiResult) -> Void) -> URLSessionTask? {
+    /// 画像取得処理
+    /// - Parameters:
+    ///   - url: 画像URL
+    ///   - type: 取得した結果
+    ///   - completion: delegateで実行するfunction
+    /// - Returns: タスク
+    class func getImage(url: URL,
+                        type: ApiResultType,
+                        completion: @escaping (ApiResult) -> Void) -> URLSessionTask? {
 
         let task = self.shared.dataTask(with: url) {(data, _, err) in
             if let err = err {
