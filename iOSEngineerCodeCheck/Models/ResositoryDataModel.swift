@@ -34,6 +34,10 @@ class RepositoryListModel: ApiTask {
     }
 }
 
+struct GitHubSearchResult: Codable {
+    let items: [GitHubRepository]?
+}
+
 struct GitHubRepository: Codable {
 
     let id: Int

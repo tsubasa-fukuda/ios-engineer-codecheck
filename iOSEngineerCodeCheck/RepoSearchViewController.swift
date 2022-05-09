@@ -10,7 +10,7 @@ import UIKit
 
 class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
-    var repositories: [[String: Any]]=[]
+    var repositories: [GitHubRepository]=[]
     let repositoryListModel = RepositoryListModel()
 
     @IBOutlet weak var searchBar: UISearchBar!
@@ -59,8 +59,8 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
         let cell = UITableViewCell()
         let repo = self.repositories[indexPath.row]
-        cell.textLabel?.text = repo["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = repo["language"] as? String ?? ""
+        cell.textLabel?.text = repo.fullName ?? ""
+        cell.detailTextLabel?.text = repo.language ?? ""
         cell.tag = indexPath.row
         return cell
 
@@ -83,16 +83,15 @@ extension RepoSearchViewController: RepositoryListModelDelegate {
     /// - Parameter result: APIの取得結果（json辞書型）
     func fetchRepositories(result: ApiResult) {
         if result.type == .error {
-            self.repositories = [[String: Any]]()
+            self.repositories = [GitHubRepository]()
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
 
             return
         }
-        guard let repositoryData = result.value as? [String: Any] else { return }
-        guard let items = repositoryData["items"] as? [[String: Any]] else { return }
-
+        guard let repositoryData = result.value as? GitHubSearchResult else { return }
+        guard let items = repositoryData.items else { return }
         self.repositories = items
 
         DispatchQueue.main.async {

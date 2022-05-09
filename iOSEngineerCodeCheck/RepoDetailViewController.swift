@@ -29,11 +29,11 @@ class RepoDetailViewController: UIViewController {
         guard let index: Int = repoSearchVC.idx else { return }
         let repo = repoSearchVC.repositories[index]
 
-        languageLbl.text = "Written in \(repo["language"] as? String ?? "")"
-        stargazersCountLbl.text = "\(repo["stargazers_count"] as? Int ?? 0) stars"
-        watchersCountLbl.text = "\(repo["watchers_count"] as? Int ?? 0) watchers"
-        forksCountLbl.text = "\(repo["forks_count"] as? Int ?? 0) forks"
-        openIssuesCountLbl.text = "\(repo["open_issues_count"] as? Int ?? 0) open issues"
+        languageLbl.text = "Written in \(repo.language ?? "")"
+        stargazersCountLbl.text = "\(repo.starCount ?? 0) stars"
+        watchersCountLbl.text = "\(repo.watchersCount ?? 0) watchers"
+        forksCountLbl.text = "\(repo.forksCount ?? 0) forks"
+        openIssuesCountLbl.text = "\(repo.openIssuesCount ?? 0) open issues"
         getImage()
 
     }
@@ -42,11 +42,9 @@ class RepoDetailViewController: UIViewController {
         guard let index: Int = repoSearchVC.idx else { return }
         let repo = repoSearchVC.repositories[index]
 
-        fullNameLbl.text = repo["full_name"] as? String
+        fullNameLbl.text = repo.fullName
 
-        guard let owner = repo["owner"] as? [String: Any],
-              let avatarImgUrl = owner["avatar_url"] as? String,
-              let avatarImgUrl = URL(string: avatarImgUrl) else { return }
+        guard let avatarImgUrl = URL(string: repo.owner.avatarUrl) else { return }
 
         URLSession.shared.dataTask(with: avatarImgUrl) { [weak self] (data, _, _) in
             guard let self = self,

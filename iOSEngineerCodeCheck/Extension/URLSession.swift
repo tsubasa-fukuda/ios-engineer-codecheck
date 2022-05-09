@@ -53,7 +53,7 @@ struct ApiResult {
         case .json:
             guard let data = self.data else { return nil }
             do {
-                return try JSONSerialization.jsonObject(with: data)
+                return try JSONDecoder().decode(GitHubSearchResult.self, from: data)
             } catch { return nil }
         default:
             return [String: Any]()
