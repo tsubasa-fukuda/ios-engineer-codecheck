@@ -10,11 +10,11 @@ import UIKit
 
 class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
+    var repositories: [GitHubRepository]=[]
+    let repositoryListModel = RepositoryListModel()
+
     @IBOutlet weak var searchBar: UISearchBar!
 
-    var repos: [[String: Any]]=[]
-
-    var task: URLSessionTask?
     var searchWord: String?
     var repoUrl: String?
     var idx: Int?
@@ -24,6 +24,7 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
         // Do any additional setup after loading the view.
         searchBar.text = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self
+        repositoryListModel.repositoryListModelDelegate = self
     }
 
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -32,38 +33,11 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
         return true
     }
 
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        task?.cancel()
-    }
-
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 
-        self.searchWord = searchBar.text ?? ""
-        guard let query = self.searchWord?.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else { return }
-
-        if query.count != 0 {
-            self.repoUrl = "https://api.github.com/search/repositories?q=\(query)"
-            guard let repoUrl = URL(string: self.repoUrl ?? "") else { return }
-
-            self.task = URLSession.shared.dataTask(with: repoUrl) { [weak self] (data, _, _) in
-                guard let self = self else { return }
-                do {
-                    if let data = data,
-                       let obj = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                        if let items = obj["items"] as? [[String: Any]] {
-                        self.repos = items
-                            DispatchQueue.main.async {
-                                self.tableView.reloadData()
-                            }
-                        }
-                    }
-                } catch {
-                    // 例外処理
-                }
-            }
-        // これ呼ばなきゃリストが更新されません
-        task?.resume()
-        }
+        guard let searchWord = searchBar.text else { return }
+        self.view.endEditing(true)
+        repositoryListModel.getSearchResult(searchRawWord: searchWord)
 
     }
 
@@ -78,15 +52,15 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.repos.count
+        return self.repositories.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = UITableViewCell()
-        let repo = self.repos[indexPath.row]
-        cell.textLabel?.text = repo["full_name"] as? String ?? ""
-        cell.detailTextLabel?.text = repo["language"] as? String ?? ""
+        let repo = self.repositories[indexPath.row]
+        cell.textLabel?.text = repo.fullName
+        cell.detailTextLabel?.text = repo.language ?? ""
         cell.tag = indexPath.row
         return cell
 
@@ -99,4 +73,29 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
     }
 
+}
+
+// MARK: - tableView更新処理 -
+
+extension RepoSearchViewController: RepositoryListModelDelegate {
+
+    /// 検索結果を受信したらtableViewを更新する。
+    /// - Parameter result: APIの取得結果（json辞書型）
+    func fetchRepositories(result: ApiResult) {
+        if result.type == .error {
+            self.repositories = [GitHubRepository]()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+
+            return
+        }
+        guard let repositoryData = result.value as? GitHubSearchResult else { return }
+        guard let items = repositoryData.items else { return }
+        self.repositories = items
+
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
 }
