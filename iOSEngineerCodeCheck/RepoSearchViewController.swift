@@ -59,7 +59,7 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
         let cell = UITableViewCell()
         let repo = self.repositories[indexPath.row]
-        cell.textLabel?.text = repo.fullName ?? ""
+        cell.textLabel?.text = repo.fullName 
         cell.detailTextLabel?.text = repo.language ?? ""
         cell.tag = indexPath.row
         return cell
