@@ -9,6 +9,7 @@
 import XCTest
 @testable import iOSEngineerCodeCheck
 
+// swiftlint:disable type_name
 class iOSEngineerCodeCheckTests: XCTestCase {
 
     override func setUpWithError() throws {
@@ -19,9 +20,13 @@ class iOSEngineerCodeCheckTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func test検索URLが正しく変換できること() throws {
+        guard let url = Constraint.searchRepositoriesUrl(rawWord: "hoge") else {
+            assertionFailure("URLの変換結果がnil")
+            return
+        }
+
+        assert(url.absoluteString == "https://api.github.com/search/repositories?q=hoge")
     }
 
     func testPerformanceExample() throws {
