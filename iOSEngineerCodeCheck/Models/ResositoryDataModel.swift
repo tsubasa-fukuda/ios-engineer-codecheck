@@ -13,7 +13,7 @@ protocol RepositoryListModelDelegate: AnyObject {
 }
 
 protocol AvaterImageDelegate: AnyObject {
-    func fetchAvaterImage(result: ApiResult)
+    func fetchImage(result: ApiResult)
 }
 
 /// リポジトリの検索を行うモデル
@@ -38,9 +38,11 @@ class RepositoryListModel: ApiTask {
         task = URLSession.getApiResult(apiUrl: apiUrl, type: .json, completion: function)
     }
 
-    func getAvaterImage(url: URL) {
+    /// 画像の取得結果をViewControllerに送信する
+    /// - Parameter url: 画像URL
+    func getImageFrom(url: URL) {
 
-        guard let function = avaterImageDelegate?.fetchAvaterImage else { return }
+        guard let function = avaterImageDelegate?.fetchImage else { return }
 
         cancel()
         task = URLSession.getApiResult(apiUrl: url, type: .image, completion: function)

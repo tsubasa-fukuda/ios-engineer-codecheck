@@ -41,7 +41,7 @@ class RepoDetailViewController: UIViewController {
 
         // アバター画像取得処理
         guard let avatarUrl = URL(string: repo.owner.avatarUrl) else { return }
-        repositoryListModel.getAvaterImage(url: avatarUrl)
+        repositoryListModel.getImageFrom(url: avatarUrl)
 
     }
 
@@ -51,9 +51,9 @@ class RepoDetailViewController: UIViewController {
 
 extension RepoDetailViewController: AvaterImageDelegate {
 
-    /// 検索結果を受信したらtableViewを更新する。
+    /// 画像取得結果を受信したらtableViewを更新する。
     /// - Parameter result: APIの取得結果（json辞書型）
-    func fetchAvaterImage(result: ApiResult) {
+    func fetchImage(result: ApiResult) {
         if result.type == .error {
             DispatchQueue.main.async {
                 self.avatarView.image = nil

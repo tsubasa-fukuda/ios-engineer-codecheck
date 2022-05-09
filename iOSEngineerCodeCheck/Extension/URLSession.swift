@@ -64,7 +64,7 @@ extension URLSession {
 protocol ApiTask {
     func cancel()
     func getSearchResult(searchRawWord: String)
-    func getAvaterImage(url: URL)
+    func getImageFrom(url: URL)
 }
 
 /// Apiの結果と型を保持する構造体
