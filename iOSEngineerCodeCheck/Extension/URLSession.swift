@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension URLSession {
 
@@ -36,11 +37,34 @@ extension URLSession {
         task.resume()
         return task
     }
+
+    class func getAvaterImage(url: URL,
+                              type: ApiResultType,
+                              completion: @escaping (ApiResult) -> Void) -> URLSessionTask? {
+
+        let task = self.shared.dataTask(with: url) {(data, _, err) in
+            if let err = err {
+                print("session_error: \(err)")
+                completion(ApiResult(type: .error, data: nil))
+                return
+            }
+            guard let data = data else {
+                print("data = nil")
+                completion(ApiResult(type: .error, data: nil))
+                return
+            }
+            completion(ApiResult(type: type, data: data))
+        }
+
+        task.resume()
+        return task
+    }
 }
 
 protocol ApiTask {
     func cancel()
     func getSearchResult(searchRawWord: String)
+    func getAvaterImage(url: URL)
 }
 
 /// Apiの結果と型を保持する構造体
@@ -55,6 +79,9 @@ struct ApiResult {
             do {
                 return try JSONDecoder().decode(GitHubSearchResult.self, from: data)
             } catch { return nil }
+        case .image:
+            guard let data = self.data else { return nil }
+            return UIImage(data: data) ?? nil
         default:
             return [String: Any]()
         }
@@ -69,4 +96,5 @@ struct ApiResult {
 enum ApiResultType {
     case error
     case json
+    case image
 }

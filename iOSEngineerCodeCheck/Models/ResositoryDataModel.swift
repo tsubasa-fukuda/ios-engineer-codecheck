@@ -12,11 +12,16 @@ protocol RepositoryListModelDelegate: AnyObject {
     func fetchRepositories(result: ApiResult)
 }
 
+protocol AvaterImageDelegate: AnyObject {
+    func fetchAvaterImage(result: ApiResult)
+}
+
 /// リポジトリの検索を行うモデル
 class RepositoryListModel: ApiTask {
 
     var task: URLSessionTask?
-    weak var delegate: RepositoryListModelDelegate?
+    weak var repositoryListModelDelegate: RepositoryListModelDelegate?
+    weak var avaterImageDelegate: AvaterImageDelegate?
 
     func cancel() {
         if task?.state != URLSessionTask.State.running { return }
@@ -28,9 +33,18 @@ class RepositoryListModel: ApiTask {
     /// - Parameter serchRawWord: 検索ワード
     func getSearchResult(searchRawWord: String) {
         guard let apiUrl = Constraint.searchRepositoriesUrl(rawWord: searchRawWord) else { return }
-        guard let function = delegate?.fetchRepositories else { return }
+        guard let function = repositoryListModelDelegate?.fetchRepositories else { return }
         cancel()
         task = URLSession.getApiResult(apiUrl: apiUrl, type: .json, completion: function)
+    }
+
+    func getAvaterImage(url: URL) {
+
+        guard let function = avaterImageDelegate?.fetchAvaterImage else { return }
+
+        cancel()
+        task = URLSession.getApiResult(apiUrl: url, type: .image, completion: function)
+
     }
 }
 

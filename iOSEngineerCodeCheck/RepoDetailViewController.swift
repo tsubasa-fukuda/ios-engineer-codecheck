@@ -23,38 +23,49 @@ class RepoDetailViewController: UIViewController {
 
     var repoSearchVC: RepoSearchViewController!
 
+    let repositoryListModel = RepositoryListModel()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         guard let index: Int = repoSearchVC.idx else { return }
         let repo = repoSearchVC.repositories[index]
 
+        fullNameLbl.text = repo.fullName
         languageLbl.text = "Written in \(repo.language ?? "")"
         stargazersCountLbl.text = "\(repo.starCount ?? 0) stars"
         watchersCountLbl.text = "\(repo.watchersCount ?? 0) watchers"
         forksCountLbl.text = "\(repo.forksCount ?? 0) forks"
         openIssuesCountLbl.text = "\(repo.openIssuesCount ?? 0) open issues"
-        getImage()
+        repositoryListModel.avaterImageDelegate = self
+
+        // アバター画像取得処理
+        guard let avatarUrl = URL(string: repo.owner.avatarUrl) else { return }
+        repositoryListModel.getAvaterImage(url: avatarUrl)
 
     }
 
-    func getImage() {
-        guard let index: Int = repoSearchVC.idx else { return }
-        let repo = repoSearchVC.repositories[index]
+}
 
-        fullNameLbl.text = repo.fullName
+// MARK: - アバター画像取得処理 -
 
-        guard let avatarImgUrl = URL(string: repo.owner.avatarUrl) else { return }
+extension RepoDetailViewController: AvaterImageDelegate {
 
-        URLSession.shared.dataTask(with: avatarImgUrl) { [weak self] (data, _, _) in
-            guard let self = self,
-                  let data = data,
-                  let avatarImg = UIImage(data: data) else { return }
+    /// 検索結果を受信したらtableViewを更新する。
+    /// - Parameter result: APIの取得結果（json辞書型）
+    func fetchAvaterImage(result: ApiResult) {
+        if result.type == .error {
             DispatchQueue.main.async {
-                self.avatarView.image = avatarImg
+                self.avatarView.image = nil
             }
-        }.resume()
 
+            return
+        }
+
+        guard let avatarImg = result.value as? UIImage else { return }
+
+        DispatchQueue.main.async {
+            self.avatarView.image = avatarImg
+        }
     }
-
 }

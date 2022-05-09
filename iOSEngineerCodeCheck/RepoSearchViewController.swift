@@ -24,7 +24,7 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
         // Do any additional setup after loading the view.
         searchBar.text = "GitHubのリポジトリを検索できるよー"
         searchBar.delegate = self
-        repositoryListModel.delegate = self
+        repositoryListModel.repositoryListModelDelegate = self
     }
 
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -59,7 +59,7 @@ class RepoSearchViewController: UITableViewController, UISearchBarDelegate {
 
         let cell = UITableViewCell()
         let repo = self.repositories[indexPath.row]
-        cell.textLabel?.text = repo.fullName 
+        cell.textLabel?.text = repo.fullName
         cell.detailTextLabel?.text = repo.language ?? ""
         cell.tag = indexPath.row
         return cell
